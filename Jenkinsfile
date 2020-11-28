@@ -12,7 +12,7 @@ pipeline {
         sh '''/bin/bash -lc \'groupadd --gid $(id -g) -f envoygroup\' \\
 && useradd -o --uid $(id -u) --gid $(id -g) --no-create-home --home-dir /build envoybuild \\
 && usermod -a -G pcap envoybuild \\
-&& sudo -EHs -u envoybuild bash -c \'cd /source && ci/check_and_fix_format.sh\''''
+&& sudo -EHs -u envoybuild bash -c \'ls -la\''''
       }
     }
 
