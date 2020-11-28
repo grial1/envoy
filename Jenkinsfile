@@ -1,10 +1,8 @@
 pipeline {
   agent {
     docker {
-      args '''-u root:root -v /var/run/docker.sock:/var/run/docker.sock --cap-add SYS_PTRACE --cap-add NET_RAW --cap-add NET_ADMIN \\
-       -v "${ENVOY_DOCKER_BUILD_DIR}":"${BUILD_DIR_MOUNT_DEST}" \\
-"${START_COMMAND[@]}"'''
       image 'envoyproxy/envoy-build-ubuntu:b19d74904f19043eb196b73357853d5bce35622c'
+      args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock --cap-add SYS_PTRACE --cap-add NET_RAW --cap-add NET_ADMIN  -v "${ENVOY_DOCKER_BUILD_DIR}":"${BUILD_DIR_MOUNT_DEST}" "${START_COMMAND[@]}"'
     }
 
   }
