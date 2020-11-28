@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('format') {
       steps {
-        sh 'ci/run_envoy_docker.sh \'echo "${PWD}" | sed -E "s#/([a-zA-Z])/#\\1:/#"\''
+        sh 'sudo ci/run_envoy_docker.sh \'ci/check_and_fix_format.sh\''
       }
     }
 
