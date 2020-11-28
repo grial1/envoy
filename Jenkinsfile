@@ -8,7 +8,4 @@ pipeline {
     }
 
   }
-  environment {
-    BASH_ENV = '\'/etc/profile exec bash\''
-  }
 }
