@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('format') {
       steps {
-        sh '\'ls -la\''
+        sh 'ls -la'
       }
     }
 
