@@ -3,12 +3,12 @@ pipeline {
   stages {
     stage('format') {
       steps {
-        sh 'ci/run_envoy_docker.sh \'ls -la\''
+        sh '\'ls -la\''
       }
     }
 
   }
   environment {
-    SHELL = '"bash -c \'BASH_ENV=/etc/profile exec bash\'"'
+    BASH_ENV = '\'/etc/profile exec bash\''
   }
 }
