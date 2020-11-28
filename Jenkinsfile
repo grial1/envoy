@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('format') {
       steps {
-        sh 'echo $PWD'
+        sh 'ci/run_envoy_docker.sh \'echo $PWD\''
       }
     }
 
