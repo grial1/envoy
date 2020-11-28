@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('format') {
       steps {
-        sh 'ls -la'
+        sh 'echo "${PWD}" | sed -E "s#/([a-zA-Z])/#\\1:/#"'
       }
     }
 
