@@ -15,7 +15,7 @@ pipeline {
       }
     }
 
-    stage('format') {
+    stage('Presubmit') {
       parallel {
         stage('format') {
           steps {
@@ -38,13 +38,13 @@ pipeline {
       }
     }
 
-    stage('linux_64') {
+    stage('Build') {
       steps {
         sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.release\''
       }
     }
 
-    stage('linux_64 api') {
+    stage('Test') {
       parallel {
         stage('linux_64 api') {
           steps {
