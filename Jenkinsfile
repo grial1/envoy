@@ -7,12 +7,99 @@ pipeline {
 
   }
   stages {
-    stage('format') {
+    stage('prepare env') {
       steps {
         sh '''/bin/bash -lc \'groupadd --gid $(id -g) -f envoygroup\' \\
 && useradd -o --uid $(id -u) --gid $(id -g) --no-create-home --home-dir /build envoybuild \\
-&& usermod -a -G pcap envoybuild \\
-&& sudo -EHs -u envoybuild bash -c \'ci/check_and_fix_format.sh\''''
+&& usermod -a -G pcap envoybuild'''
+      }
+    }
+
+    stage('format') {
+      parallel {
+        stage('format') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/check_and_fix_format.sh\''
+          }
+        }
+
+        stage('docs') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh docs\''
+          }
+        }
+
+        stage('dependencies') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh deps\''
+          }
+        }
+
+      }
+    }
+
+    stage('linux_64') {
+      steps {
+        sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.release\''
+      }
+    }
+
+    stage('linux_64 api') {
+      parallel {
+        stage('linux_64 api') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.api\''
+          }
+        }
+
+        stage('linux_64 gcc') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.gcc\''
+          }
+        }
+
+        stage('linux_64 clang_tidy') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.clang_tidy\''
+          }
+        }
+
+        stage('linux_64 asan') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.asan\''
+          }
+        }
+
+        stage('linux_64 tsan') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.tsan\''
+          }
+        }
+
+        stage('linux_64 compile_time_options') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.compile_time_options\''
+          }
+        }
+
+        stage('linux_64 coverage') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.coverage\''
+          }
+        }
+
+        stage('linux_64 fuzz_coverage') {
+          steps {
+            sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.fuzz_coverage\''
+          }
+        }
+
+      }
+    }
+
+    stage('success') {
+      steps {
+        echo 'Pipeline finished'
       }
     }
 
