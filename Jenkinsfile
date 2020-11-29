@@ -25,7 +25,7 @@ pipeline {
 
         stage('docs') {
           when {
-            enviroment name: 'RELEASE_RUN', value: true
+            environment name: 'RELEASE_RUN', value: true
           }
           steps {
             sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh docs\''
@@ -34,7 +34,7 @@ pipeline {
 
         stage('dependencies') {
           when {
-            enviroment name: 'RELEASE_RUN', value: true
+            environment name: 'RELEASE_RUN', value: true
           }
           steps {
             sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh deps\''
@@ -66,7 +66,7 @@ pipeline {
 
         stage('linux_64 clang_tidy') {
           when {
-            enviroment name: 'RELEASE_RUN', value: true
+            environment name: 'RELEASE_RUN', value: true
           }
           steps {
             sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.clang_tidy\''
@@ -87,7 +87,7 @@ pipeline {
 
         stage('linux_64 compile_time_options') {
           when {
-            enviroment name: 'RELEASE_RUN', value: true
+            environment name: 'RELEASE_RUN', value: true
           }
           steps {
             sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.compile_time_options\''
@@ -96,7 +96,7 @@ pipeline {
 
         stage('linux_64 coverage') {
           when {
-            enviroment name: 'RELEASE_RUN', value: true
+            environment name: 'RELEASE_RUN', value: true
           }
           steps {
             sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.coverage\''
@@ -105,7 +105,7 @@ pipeline {
 
         stage('linux_64 fuzz_coverage') {
           when {
-            enviroment name: 'RELEASE_RUN', value: true
+            environment name: 'RELEASE_RUN', value: true
           }
           steps {
             sh 'sudo -EHs -u envoybuild bash -c \'ci/do_ci.sh bazel.fuzz_coverage\''
