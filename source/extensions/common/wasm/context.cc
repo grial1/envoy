@@ -195,7 +195,11 @@ void Context::onResolveDns(uint32_t token, Envoy::Network::DnsResolver::Resoluti
   auto buffer = std::unique_ptr<char[]>(new char[s]);
   char* b = buffer.get();
   uint32_t n = response.size();
+<<<<<<< HEAD
   safeMemcpy(reinterpret_cast<uint8_t(*)[4]>(b), &n);
+=======
+  safeMemcpyDst(b, &n);
+>>>>>>> issue-9328
   b += sizeof(uint32_t);
   for (auto& e : response) {
     uint32_t ttl = e.ttl_.count();
@@ -895,7 +899,7 @@ WasmResult Context::httpCall(absl::string_view cluster, const Pairs& request_hea
     return WasmResult::BadArgument;
   }
   auto cluster_string = std::string(cluster);
-  if (clusterManager().get(cluster_string) == nullptr) {
+  if (clusterManager().getThreadLocalCluster(cluster_string) == nullptr) {
     return WasmResult::BadArgument;
   }
 
