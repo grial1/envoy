@@ -10,6 +10,7 @@
 
 #include "gtest/gtest.h"
 
+using testing::ElementsAre;
 using testing::Eq;
 
 namespace Envoy {
@@ -22,13 +23,13 @@ TEST(SafeMemcpyTest, CopyUint8) {
 }
 
 TEST(SafeMemcpyUnsafeSrcTest, CopyUint8Pointer) {
-  const uint8_t* src = new uint8_t[8];
+  uint8_t* src = new uint8_t[8];
   for (int i = 0; i < 8; ++i)
     src[i] = i;
   uint8_t dst[8];
   safeMemcpyUnsafeSrc(&dst, src);
-  Eq(dst == {0, 1, 2, 3, 4, 5, 6, 7});
-  delete src;
+  ASSERT_THAT(dst, ElementsAre(0, 1, 2, 3, 4, 5, 6, 7));
+  delete[] src;
 }
 
 TEST(SafeMemcpyUnsafeDstTest, PrependGrpcFrameHeader) {
