@@ -16,19 +16,28 @@ namespace Envoy {
 
 TEST(SafeMemcpyTest, CopyUint8) {
   const uint8_t src[] = {0, 1, 1, 2, 3, 5, 8, 13};
-  std::array<uint8_t, 8> dst;
-  safeMemcpyDst(dst.data(), &src);
-  Eq(dst == std::array<uint8_t, 8>{0, 1, 1, 2, 3, 5, 8, 13});
+  uint64_t dst;
+  safeMemcpy(&dst, &src);
+  Eq(dst == 282583128934413);
 }
 
-// Additional (integration) test - not ordinary copy
-TEST(SafeMemcpyTest, PrependGrpcFrameHeader) {
+TEST(SafeMemcpyUnsafeSrcTest, CopyUint8Pointer) {
+  const uint8_t* src = new uint8_t[8];
+  for(int i = 0; i < 8; ++i)
+    src[i] = i;
+  uint8_t dst[8];
+  safeMemcpyUnsafeSrc(&dst, src);
+  Eq(dst == {0, 1, 2, 3, 4, 5, 6, 7});
+  delete src;
+}
+
+TEST(SafeMemcpyUnsafeDstTest, PrependGrpcFrameHeader) {
   auto buffer = std::make_unique<Buffer::OwnedImpl>();
   buffer->add("test", 4);
   std::array<char, 5> expected_header;
   expected_header[0] = 0; // flags
   const uint32_t nsize = htonl(4);
-  safeMemcpyDst(&expected_header[1], &nsize);
+  safeMemcpyUnsafeDst(&expected_header[1], &nsize);
   std::string header_string(&expected_header[0], 5);
   Grpc::Common::prependGrpcFrameHeader(*buffer);
   EXPECT_EQ(buffer->toString(), header_string + "test");
