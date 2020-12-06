@@ -23,7 +23,7 @@ TEST(SafeMemcpyTest, CopyUint8) {
 
 TEST(SafeMemcpyUnsafeSrcTest, CopyUint8Pointer) {
   const uint8_t* src = new uint8_t[8];
-  for(int i = 0; i < 8; ++i)
+  for (int i = 0; i < 8; ++i)
     src[i] = i;
   uint8_t dst[8];
   safeMemcpyUnsafeSrc(&dst, src);
